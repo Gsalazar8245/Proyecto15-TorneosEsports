@@ -1,0 +1,65 @@
+@model TorneosEsports.Web.Models.Entidades.Evento
+
+@{
+    ViewData["Title"] = "Editar evento";
+}
+
+<h1>Editar evento</h1>
+<hr />
+<div class="row">
+    <div class="col-md-5">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="Nombre" class="form-label">Nombre</label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Sede" class="form-label">Sede</label>
+                <input asp-for="Sede" class="form-control" />
+                <span asp-validation-for="Sede" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Fecha" class="form-label">Fecha del evento</label>
+                <input asp-for="Fecha" class="form-control" />
+                <span asp-validation-for="Fecha" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CupoPuestos" class="form-label">Cupo de puestos</label>
+                <input asp-for="CupoPuestos" class="form-control" />
+                <span asp-validation-for="CupoPuestos" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="PrecioPase" class="form-label">Precio del pase (colones)</label>
+                <input asp-for="PrecioPase" class="form-control" />
+                <span asp-validation-for="PrecioPase" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ImagenUrl" class="form-label">Imagen (ruta o URL)</label>
+                <input asp-for="ImagenUrl" class="form-control" />
+                <span asp-validation-for="ImagenUrl" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Descripcion" class="form-label">Descripción</label>
+                <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <a asp-action="Index" class="btn btn-link">Volver a la lista</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

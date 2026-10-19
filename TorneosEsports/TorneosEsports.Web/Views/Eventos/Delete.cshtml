@@ -1,0 +1,32 @@
+@model TorneosEsports.Web.Models.Entidades.Evento
+
+@{
+    ViewData["Title"] = "Eliminar evento";
+}
+
+<h1>Eliminar evento</h1>
+<h4 class="text-danger">¿Seguro que quieres eliminar este evento?</h4>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-3">Nombre</dt>
+    <dd class="col-sm-9">@Model.Nombre</dd>
+
+    <dt class="col-sm-3">Sede</dt>
+    <dd class="col-sm-9">@Model.Sede</dd>
+
+    <dt class="col-sm-3">Fecha del evento</dt>
+    <dd class="col-sm-9">@Model.Fecha.ToString("dd/MM/yyyy HH:mm")</dd>
+
+    <dt class="col-sm-3">Cupo de puestos</dt>
+    <dd class="col-sm-9">@Model.CupoPuestos</dd>
+
+    <dt class="col-sm-3">Precio del pase</dt>
+    <dd class="col-sm-9">₡@Model.PrecioPase.ToString("N0")</dd>
+</dl>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-link">Cancelar</a>
+</form>
