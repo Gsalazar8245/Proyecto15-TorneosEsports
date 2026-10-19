@@ -16,6 +16,16 @@ public class InscripcionController : Controller
 
     // GET: /Inscripcion/Crear?torneoId=3
     [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        var torneos = await _db.Torneos
+            .Include(t => t.Equipos)
+            .Where(t => t.Estado == EstadoTorneo.Abierto)
+            .OrderBy(t => t.CierreInscripciones)
+            .ToListAsync();
+
+        return View(torneos);
+    }
     public async Task<IActionResult> Crear(int torneoId)
     {
         var torneo = await _db.Torneos.FindAsync(torneoId);
@@ -25,7 +35,7 @@ public class InscripcionController : Controller
         if (error != null)
         {
             TempData["Error"] = error;
-            return RedirectToAction("Index", "Home"); // o el catálogo de Erlan
+            return RedirectToAction("Index", "Carrito"); // o el catálogo de Erlan
         }
 
         return View(new InscripcionEquipoViewModel
