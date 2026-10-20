@@ -267,7 +267,13 @@ namespace TorneosEsports.Web.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("CodigoComprobante")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaValidacion")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -281,9 +287,16 @@ namespace TorneosEsports.Web.Data.Migrations
                     b.Property<int>("TorneoId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Validado")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CapitanId");
+
+                    b.HasIndex("CodigoComprobante")
+                        .IsUnique()
+                        .HasFilter("[CodigoComprobante] IS NOT NULL");
 
                     b.HasIndex("TorneoId", "Nombre")
                         .IsUnique();
