@@ -1,0 +1,17 @@
+@* Editar torneo (solo administrador, solo con inscripciones abiertas). *@
+@model TorneoFormularioViewModel
+@{
+    ViewData["Title"] = "Editar torneo";
+}
+
+<h1 class="h3 mb-3">Editar torneo de @Model.Juego</h1>
+
+<form asp-action="Editar" asp-route-id="@Model.Id" method="post" class="col-lg-8">
+    <partial name="_Formulario" model="Model" />
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    <a asp-action="Detalle" asp-route-id="@Model.Id" class="btn btn-link">Cancelar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

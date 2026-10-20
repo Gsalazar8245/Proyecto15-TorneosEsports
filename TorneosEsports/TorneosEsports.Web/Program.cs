@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TorneosEsports.Web.Data;
+using TorneosEsports.Web.Extensions;
 using TorneosEsports.Web.Security;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +45,9 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 // Servicios necesarios para las páginas Razor de Identity.
 builder.Services.AddRazorPages();
+
+// Módulos de cada integrante.
+builder.Services.AddModuloTorneos(); // Torneos, base de datos y llaves
 
 var app = builder.Build();
 

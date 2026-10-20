@@ -1,0 +1,61 @@
+@* Lista de torneos (catálogo 2). Se usa para /Torneos y para /eventos/{id}/torneos. *@
+@model IEnumerable<Torneo>
+@{
+    bool esAdmin = User.IsInRole(TorneosEsports.Web.Controllers.TorneosController.RolAdministrador);
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">@ViewData["Title"]</h1>
+    @if (esAdmin)
+    {
+        <a class="btn btn-primary" asp-action="Crear">Nuevo torneo</a>
+    }
+</div>
+
+<partial name="_Mensajes" />
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Todavía no hay torneos.</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Juego</th>
+                    <th>Evento</th>
+                    <th>Formato</th>
+                    <th class="text-center">Equipos</th>
+                    <th class="text-end">Inscripción</th>
+                    <th>Cierre</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var torneo in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@torneo.Juego</td>
+                        <td>@torneo.Evento?.Nombre</td>
+                        <td>@torneo.Formato</td>
+                        <td class="text-center">@torneo.Equipos.Count / @torneo.CupoEquipos</td>
+                        <td class="text-end">₡@torneo.PrecioInscripcion.ToString("N0")</td>
+                        <td>@torneo.CierreInscripciones.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td><partial name="_EstadoTorneo" model="torneo.Estado" /></td>
+                        <td class="text-end text-nowrap">
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@torneo.Id">Detalle</a>
+                            @if (esAdmin && torneo.PuedeEditarse)
+                            {
+                                <a class="btn btn-sm btn-outline-warning" asp-action="Editar" asp-route-id="@torneo.Id">Editar</a>
+                                <a class="btn btn-sm btn-outline-danger" asp-action="Eliminar" asp-route-id="@torneo.Id">Eliminar</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

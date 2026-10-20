@@ -1,0 +1,80 @@
+@* Detalle de un torneo con sus equipos inscritos. *@
+@model Torneo
+@{
+    ViewData["Title"] = $"Torneo de {Model.Juego}";
+    bool esAdmin = User.IsInRole(TorneosEsports.Web.Controllers.TorneosController.RolAdministrador);
+    int pagados = Model.Equipos.Count(e => e.Pagado);
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-action="Index">Torneos</a></li>
+        <li class="breadcrumb-item"><a asp-action="PorEvento" asp-route-eventoId="@Model.EventoId">@Model.Evento?.Nombre</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.Juego</li>
+    </ol>
+</nav>
+
+<partial name="_Mensajes" />
+
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+    <div>
+        <h1 class="h3 mb-1">@Model.Juego</h1>
+        <partial name="_EstadoTorneo" model="Model.Estado" />
+    </div>
+    <div class="d-flex gap-2">
+        @if (esAdmin && Model.PuedeEditarse)
+        {
+            <a class="btn btn-outline-warning" asp-action="Editar" asp-route-id="@Model.Id">Editar</a>
+        }
+    </div>
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Evento</dt>
+    <dd class="col-sm-9">@Model.Evento?.Nombre — @Model.Evento?.Sede, @Model.Evento?.Fecha.ToString("dd/MM/yyyy HH:mm")</dd>
+    <dt class="col-sm-3">Formato</dt>
+    <dd class="col-sm-9">@Model.Formato</dd>
+    <dt class="col-sm-3">Equipos</dt>
+    <dd class="col-sm-9">@Model.Equipos.Count de @Model.CupoEquipos (@pagados con la inscripción pagada · @Model.CuposDisponibles(Model.Equipos.Count) cupos libres)</dd>
+    <dt class="col-sm-3">Inscripción por equipo</dt>
+    <dd class="col-sm-9">₡@Model.PrecioInscripcion.ToString("N0")</dd>
+    <dt class="col-sm-3">Cierre de inscripciones</dt>
+    <dd class="col-sm-9">@Model.CierreInscripciones.ToString("dd/MM/yyyy HH:mm")</dd>
+</dl>
+
+<h2 class="h5 mt-4">Equipos inscritos</h2>
+@if (Model.Equipos.Count == 0)
+{
+    <p class="text-muted">Todavía no hay equipos inscritos.</p>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+        @foreach (var equipo in Model.Equipos.OrderBy(e => e.FechaCreacion))
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="h6 card-title d-flex justify-content-between">
+                            @equipo.Nombre
+                            @if (equipo.Pagado)
+                            {
+                                <span class="badge bg-success">Pagado</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Pendiente de pago</span>
+                            }
+                        </h3>
+                        <ul class="list-unstyled small mb-0">
+                            @foreach (var integrante in equipo.Integrantes)
+                            {
+                                <li>@integrante.Nick <span class="text-muted">· @integrante.Nombre</span></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
