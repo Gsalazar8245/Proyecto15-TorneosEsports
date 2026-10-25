@@ -1,0 +1,33 @@
+﻿@model TorneosEsports.Web.Models.ViewModels.BracketViewModel
+
+@if (!Model.Partidos.Any())
+{
+    <p class="text-muted">Las llaves todavía no se han generado.</p>
+}
+else
+{
+    var ultima = Model.Partidos.Max(p => p.Ronda);
+    <div class="d-flex gap-4 overflow-auto pb-3">
+        @foreach (var ronda in Model.Partidos.GroupBy(p => p.Ronda).OrderBy(g => g.Key))
+        {
+            <div style="min-width:220px">
+                <h6 class="text-center">
+                    @(ronda.Key == ultima ? "Final" : ronda.Key == ultima - 1 ? "Semifinal" : $"Ronda {ronda.Key}")
+                </h6>
+                @foreach (var p in ronda)
+                {
+                    <div class="card mb-3 shadow-sm">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item @(p.GanadorId.HasValue && p.GanadorId == p.EquipoAId ? "list-group-item-success fw-bold" : "")">
+                                @(p.EquipoA?.Nombre ?? "Por definir")
+                            </li>
+                            <li class="list-group-item @(p.GanadorId.HasValue && p.GanadorId == p.EquipoBId ? "list-group-item-success fw-bold" : "")">
+                                @(p.EsBye ? "Pasa sin jugar (bye)" : p.EquipoB?.Nombre ?? "Por definir")
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}

@@ -16,6 +16,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddSignalR();
+builder.Services.AddScoped<TorneosEsports.Web.Hubs.IBracketNotificador, TorneosEsports.Web.Hubs.BracketNotificador>();
 
 // Configuración de ASP.NET Core Identity con roles.
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
@@ -78,6 +80,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+app.MapHub<TorneosEsports.Web.Hubs.BracketHub>("/hubs/bracket");
 
 // Páginas de ASP.NET Core Identity.
 app.MapRazorPages()
