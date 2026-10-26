@@ -15,7 +15,8 @@ namespace TorneosEsports.Web.Controllers;
 /// devolver. Las páginas de mantenimiento exigen el rol Administrador.
 /// </remarks>
 /// <param name="torneos">Servicio del catálogo de torneos.</param>
-public class TorneosController(IServicioTorneos torneos) : Controller
+/// <param name="llaves">Servicio de llaves (para cerrar inscripciones).</param>
+public class TorneosController(IServicioTorneos torneos, IServicioLlaves llaves) : Controller
 {
     /// <summary>Nombre del rol de administrador (lo crea IdentitySeeder).</summary>
     public const string RolAdministrador = "Administrador";
@@ -183,6 +184,27 @@ public class TorneosController(IServicioTorneos torneos) : Controller
 
         TempData["Mensaje"] = resultado.Mensaje;
         return RedirectToAction(nameof(Index));
+    }
+
+    /// <summary>
+    /// Cierra las inscripciones y genera automáticamente las llaves (regla distintiva).
+    /// </summary>
+    /// <param name="id">Id del torneo.</param>
+    /// <returns>Redirección al bracket, o al detalle si no se pudo.</returns>
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = RolAdministrador)]
+    public async Task<IActionResult> CerrarInscripciones(int id)
+    {
+        var resultado = await llaves.CerrarInscripcionesYGenerarAsync(id);
+        if (!resultado.Exito)
+        {
+            TempData["Error"] = resultado.Mensaje;
+            return RedirectToAction(nameof(Detalle), new { id });
+        }
+
+        TempData["Mensaje"] = resultado.Mensaje;
+        return RedirectToAction(nameof(LlavesController.Ver), "Llaves", new { torneoId = id });
     }
 
     /// <summary>Llena el selector de eventos del formulario.</summary>

@@ -1,0 +1,58 @@
+/* Estilos del bracket. */
+.bracket {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+}
+
+.bracket-ronda {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 1rem;
+    min-width: 220px;
+}
+
+.bracket-titulo {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6c757d;
+    margin: 0;
+}
+
+.bracket-partido {
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    background: #fff;
+    overflow: hidden;
+}
+
+.bracket-partido.es-bye {
+    border-style: dashed;
+    opacity: 0.8;
+}
+
+.bracket-equipo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    min-height: 2.2rem;
+}
+
+.bracket-equipo + .bracket-equipo {
+    border-top: 1px solid #dee2e6;
+}
+
+.bracket-equipo.ganador {
+    background: #d1e7dd;
+    font-weight: 600;
+}
+
+.bracket-equipo.perdedor {
+    color: #adb5bd;
+    text-decoration: line-through;
+}
