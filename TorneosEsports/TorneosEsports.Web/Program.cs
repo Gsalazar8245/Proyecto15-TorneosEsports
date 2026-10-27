@@ -85,6 +85,8 @@ app.MapHub<TorneosEsports.Web.Hubs.BracketHub>("/hubs/bracket");
 // Páginas de ASP.NET Core Identity.
 app.MapRazorPages()
    .WithStaticAssets();
+// En Desarrollo: aplica las migraciones y crea los datos de prueba (equipos y administrador de prueba).
+   await app.SembrarDatosDePruebaAsync();
 // Crear los roles iniciales del sistema.
 await IdentitySeeder.InitializeAsync(app.Services, app.Configuration);
 app.Run();
