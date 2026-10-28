@@ -1,0 +1,42 @@
+@* Campos compartidos por Crear y Editar. Las validaciones salen de las DataAnnotations del ViewModel. *@
+@model TorneoFormularioViewModel
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+<input type="hidden" asp-for="Id" />
+
+<div class="mb-3">
+    <label asp-for="EventoId" class="form-label"></label>
+    <select asp-for="EventoId" asp-items="Model.Eventos" class="form-select">
+        <option value="">— Seleccione un evento —</option>
+    </select>
+    <span asp-validation-for="EventoId" class="text-danger"></span>
+</div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label asp-for="Juego" class="form-label"></label>
+        <input asp-for="Juego" class="form-control" placeholder="Valorant" />
+        <span asp-validation-for="Juego" class="text-danger"></span>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label asp-for="Formato" class="form-label"></label>
+        <input asp-for="Formato" class="form-control" />
+        <span asp-validation-for="Formato" class="text-danger"></span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <label asp-for="CupoEquipos" class="form-label"></label>
+        <input asp-for="CupoEquipos" class="form-control" min="2" max="64" />
+        <span asp-validation-for="CupoEquipos" class="text-danger"></span>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label asp-for="PrecioInscripcion" class="form-label"></label>
+        <input asp-for="PrecioInscripcion" class="form-control" />
+        <span asp-validation-for="PrecioInscripcion" class="text-danger"></span>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label asp-for="CierreInscripciones" class="form-label"></label>
+        <input asp-for="CierreInscripciones" class="form-control" />
+        <span asp-validation-for="CierreInscripciones" class="text-danger"></span>
+    </div>
+</div>

@@ -1,0 +1,91 @@
+﻿@model TorneosEsports.Web.Models.Entidades.Evento
+
+@{
+    ViewData["Title"] = Model.Nombre;
+    var tieneImagen = !string.IsNullOrWhiteSpace(Model.ImagenUrl)
+                      && (Model.ImagenUrl.StartsWith("http") || Model.ImagenUrl.StartsWith("/"));
+}
+
+<div class="py-4">
+    <a asp-action="Index" class="btn btn-link ps-0">&larr; Volver al catálogo</a>
+
+    <div class="row g-4 mt-1">
+        <div class="col-md-5">
+            @if (tieneImagen)
+            {
+                <img src="@Model.ImagenUrl" class="img-fluid rounded" alt="@Model.Nombre" />
+            }
+            else
+            {
+                <div class="d-flex align-items-center justify-content-center bg-dark text-white rounded"
+                     style="height:260px;font-size:5rem;">
+                    @(Model.Nombre.Length > 0 ? Model.Nombre[..1].ToUpper() : "?")
+                </div>
+            }
+        </div>
+
+        <div class="col-md-7">
+            <h1>@Model.Nombre</h1>
+            <p class="lead">@(string.IsNullOrWhiteSpace(Model.Descripcion) ? "Este evento aún no tiene descripción." : Model.Descripcion)</p>
+
+            <dl class="row">
+                <dt class="col-sm-4">Sede</dt>
+                <dd class="col-sm-8">@Model.Sede</dd>
+
+                <dt class="col-sm-4">Fecha y hora</dt>
+                <dd class="col-sm-8">@Model.Fecha.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                <dt class="col-sm-4">Cupo de puestos</dt>
+                <dd class="col-sm-8">@Model.CupoPuestos</dd>
+
+                <dt class="col-sm-4">Precio del pase</dt>
+                <dd class="col-sm-8">@(Model.PrecioPase == 0 ? "Gratis" : "₡" + Model.PrecioPase.ToString("N0"))</dd>
+            </dl>
+        </div>
+    </div>
+
+    <h2 class="h4 mt-4">Torneos de este evento</h2>
+    @if (!Model.Torneos.Any())
+    {
+        <p class="text-muted">Todavía no hay torneos publicados para este evento.</p>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Juego</th>
+                        <th>Formato</th>
+                        <th>Cierre de inscripciones</th>
+                        <th>Precio por equipo</th>
+                        <th>Cupos libres</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in Model.Torneos.OrderBy(t => t.Juego))
+                    {
+                        <tr>
+                            <td>@t.Juego</td>
+                            <td>@t.Formato</td>
+                            <td>@t.CierreInscripciones.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>₡@t.PrecioInscripcion.ToString("N0")</td>
+                            <td>@t.CuposDisponibles(t.Equipos.Count) de @t.CupoEquipos</td>
+                            <td>
+                                @if (t.AceptaInscripciones(DateTime.Now))
+                                {
+                                    <span class="badge text-bg-success">Inscripciones abiertas</span>
+                                }
+                                else
+                                {
+                                    <span class="badge text-bg-secondary">Inscripciones cerradas</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TorneosEsports.Web.Data;
+using TorneosEsports.Web.Extensions;
 using TorneosEsports.Web.Security;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -45,6 +46,9 @@ builder.Services.AddSession();
 // Servicios necesarios para las páginas Razor de Identity.
 builder.Services.AddRazorPages();
 
+// Módulos de cada integrante.
+builder.Services.AddModuloTorneos(); // Torneos, base de datos y llaves
+
 var app = builder.Build();
 
 // Configuración del manejo de errores.
@@ -78,6 +82,8 @@ app.MapControllerRoute(
 // Páginas de ASP.NET Core Identity.
 app.MapRazorPages()
    .WithStaticAssets();
+// En Desarrollo: aplica las migraciones y crea los datos de prueba (equipos y administrador de prueba).
+   await app.SembrarDatosDePruebaAsync();
 // Crear los roles iniciales del sistema.
 await IdentitySeeder.InitializeAsync(app.Services, app.Configuration);
 app.Run();

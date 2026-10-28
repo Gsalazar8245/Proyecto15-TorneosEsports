@@ -1,0 +1,17 @@
+@* Crear torneo (solo administrador). *@
+@model TorneoFormularioViewModel
+@{
+    ViewData["Title"] = "Nuevo torneo";
+}
+
+<h1 class="h3 mb-3">Nuevo torneo</h1>
+
+<form asp-action="Crear" method="post" class="col-lg-8">
+    <partial name="_Formulario" model="Model" />
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-link">Cancelar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
