@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TorneosEsports.Web.Data;
 using TorneosEsports.Web.Security;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Configuración de la base de datos.
 var connectionString = builder.Configuration
