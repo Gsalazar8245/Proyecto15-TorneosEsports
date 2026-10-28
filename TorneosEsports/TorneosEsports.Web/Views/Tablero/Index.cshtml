@@ -1,0 +1,167 @@
+﻿@using System.Text.Json
+@model TableroViewModel
+
+@{
+    ViewData["Title"] = "Tablero del administrador";
+    var etiquetasTorneos = JsonSerializer.Serialize(Model.Torneos.Select(t => t.Etiqueta));
+    var cupos = JsonSerializer.Serialize(Model.Torneos.Select(t => t.Cupo));
+    var inscritosTorneo = JsonSerializer.Serialize(Model.Torneos.Select(t => t.Inscritos));
+    var pagadosTorneo = JsonSerializer.Serialize(Model.Torneos.Select(t => t.Pagados));
+    var nombresEventos = JsonSerializer.Serialize(Model.Eventos.Select(e => e.Nombre));
+    var inscritosEvento = JsonSerializer.Serialize(Model.Eventos.Select(e => e.Inscritos));
+    var pagadosEvento = JsonSerializer.Serialize(Model.Eventos.Select(e => e.Pagados));
+}
+
+<div class="py-3">
+    <h1 class="mb-1">Tablero del administrador</h1>
+    <p class="text-muted">
+        Ocupación de los torneos y equipos inscritos. «Pagados» son los equipos con la inscripción aprobada,
+        los únicos que entran a las llaves.
+    </p>
+
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+            <div class="card h-100"><div class="card-body">
+                <div class="text-muted small">Eventos próximos</div>
+                <div class="fs-2 fw-semibold">@Model.EventosProximos</div>
+                <div class="text-muted small">de @Model.TotalEventos en total</div>
+            </div></div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card h-100"><div class="card-body">
+                <div class="text-muted small">Torneos</div>
+                <div class="fs-2 fw-semibold">@Model.TotalTorneos</div>
+                <div class="text-muted small">cupo total: @Model.CupoTotal equipos</div>
+            </div></div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card h-100"><div class="card-body">
+                <div class="text-muted small">Equipos inscritos</div>
+                <div class="fs-2 fw-semibold">@Model.EquiposInscritos</div>
+                <div class="text-muted small">@Model.EquiposPagados con pago aprobado</div>
+            </div></div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card h-100"><div class="card-body">
+                <div class="text-muted small">Ocupación global</div>
+                <div class="fs-2 fw-semibold">@Model.OcupacionGlobal.ToString("0.#")%</div>
+                <div class="text-muted small">pagados sobre el cupo total</div>
+            </div></div>
+        </div>
+    </div>
+
+    <div id="avisoGraficos" class="alert alert-warning d-none">
+        No se pudo cargar la librería de gráficos. Revisa la conexión a internet y recarga la página.
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-7">
+            <div class="card h-100"><div class="card-body">
+                <h2 class="h5">Ocupación por torneo</h2>
+                <div style="position:relative;height:320px;"><canvas id="graficoTorneos"></canvas></div>
+            </div></div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card h-100"><div class="card-body">
+                <h2 class="h5">Equipos por evento</h2>
+                <div style="position:relative;height:320px;"><canvas id="graficoEventos"></canvas></div>
+            </div></div>
+        </div>
+    </div>
+
+    <h2 class="h5">Detalle por torneo</h2>
+    @if (!Model.Torneos.Any())
+    {
+        <div class="alert alert-info">Todavía no hay torneos registrados.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Torneo</th>
+                        <th>Evento</th>
+                        <th>Estado</th>
+                        <th class="text-end">Cupo</th>
+                        <th class="text-end">Inscritos</th>
+                        <th class="text-end">Pagados</th>
+                        <th style="min-width:160px;">Ocupación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in Model.Torneos)
+                    {
+                        var ancho = (int)Math.Min(100, Math.Round(t.Ocupacion));
+                        <tr>
+                            <td>@t.Juego</td>
+                            <td>@t.Evento</td>
+                            <td>@t.EstadoTexto</td>
+                            <td class="text-end">@t.Cupo</td>
+                            <td class="text-end">@t.Inscritos</td>
+                            <td class="text-end">@t.Pagados</td>
+                            <td>
+                                <div class="progress" role="progressbar" aria-valuenow="@ancho" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar" style="width:@ancho%">@ancho%</div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        if (typeof Chart === 'undefined') {
+            document.getElementById('avisoGraficos').classList.remove('d-none');
+        } else {
+            const colorCupo = '#adb5bd';
+            const colorInscritos = '#0d6efd';
+            const colorPagados = '#198754';
+
+            new Chart(document.getElementById('graficoTorneos'), {
+                type: 'bar',
+                data: {
+                    labels: @Html.Raw(etiquetasTorneos),
+                    datasets: [
+                        { label: 'Cupo de equipos', data: @Html.Raw(cupos), backgroundColor: colorCupo },
+                        { label: 'Inscritos', data: @Html.Raw(inscritosTorneo), backgroundColor: colorInscritos },
+                        { label: 'Pagados', data: @Html.Raw(pagadosTorneo), backgroundColor: colorPagados }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, ticks: { precision: 0 }, title: { display: true, text: 'Equipos' } }
+                    },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            new Chart(document.getElementById('graficoEventos'), {
+                type: 'bar',
+                data: {
+                    labels: @Html.Raw(nombresEventos),
+                    datasets: [
+                        { label: 'Inscritos', data: @Html.Raw(inscritosEvento), backgroundColor: colorInscritos },
+                        { label: 'Pagados', data: @Html.Raw(pagadosEvento), backgroundColor: colorPagados }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { beginAtZero: true, ticks: { precision: 0 }, title: { display: true, text: 'Equipos' } }
+                    },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+    </script>
+}
