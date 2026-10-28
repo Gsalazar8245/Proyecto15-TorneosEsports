@@ -22,9 +22,24 @@
         <partial name="_EstadoTorneo" model="Model.Estado" />
     </div>
     <div class="d-flex gap-2">
+        @if (Model.Estado is EstadoTorneo.EnJuego or EstadoTorneo.Finalizado)
+        {
+            <a class="btn btn-primary" asp-controller="Llaves" asp-action="Ver" asp-route-torneoId="@Model.Id">Ver llaves</a>
+        }
+        @if (Model.AceptaInscripciones(DateTime.Now) && Model.CuposDisponibles(Model.Equipos.Count) > 0)
+        {
+            @* La inscripción la maneja InscripcionController; si no hay sesión, pide iniciar sesión. *@
+            <a class="btn btn-success" asp-controller="Inscripcion" asp-action="Crear" asp-route-torneoId="@Model.Id">Inscribir equipo</a>
+        }
         @if (esAdmin && Model.PuedeEditarse)
         {
             <a class="btn btn-outline-warning" asp-action="Editar" asp-route-id="@Model.Id">Editar</a>
+            <form asp-action="CerrarInscripciones" asp-route-id="@Model.Id" method="post"
+                  onsubmit="return confirm('¿Cerrar inscripciones y generar las llaves? Ya no se podrán inscribir más equipos.');">
+                <button type="submit" class="btn btn-success" disabled="@(pagados < Torneo.MinimoEquiposParaLlaves)">
+                    Cerrar inscripciones y generar llaves
+                </button>
+            </form>
         }
     </div>
 </div>

@@ -1,0 +1,21 @@
+@* Página del bracket. El contenedor #bracket es el que el tiempo real (SignalR) recarga
+   con /torneos/{id}/llaves/parcial cuando SignalR avisa de un cambio. *@
+@model LlavesViewModel
+@{
+    ViewData["Title"] = $"Llaves de {Model.Juego}";
+}
+<link rel="stylesheet" href="~/css/llaves.css" asp-append-version="true" />
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Torneos" asp-action="Index">Torneos</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Torneos" asp-action="Detalle" asp-route-id="@Model.TorneoId">@Model.Juego</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Llaves</li>
+    </ol>
+</nav>
+
+<partial name="~/Views/Torneos/_Mensajes.cshtml" />
+
+<div id="bracket" data-torneo-id="@Model.TorneoId">
+    <partial name="_Bracket" model="Model" />
+</div>
