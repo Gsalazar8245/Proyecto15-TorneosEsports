@@ -18,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<TorneosEsports.Web.Hubs.IBracketNotificador, TorneosEsports.Web.Hubs.BracketNotificador>();
+builder.Services.AddScoped<TorneosEsports.Web.Services.Interfaces.INotificadorLlaves, TorneosEsports.Web.Hubs.NotificadorLlavesSignalR>();
 
 // Configuración de ASP.NET Core Identity con roles.
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
