@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Correos guardados en modo desarrollo (módulo de pagos)
+CorreosEnviados/

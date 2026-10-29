@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TorneosEsports.Web.Models.Entidades;
 
@@ -39,6 +40,55 @@ public class Pedido : EntidadBase
 
     /// <summary>Pago asociado, si ya se intentó pagar.</summary>
     public Pago? Pago { get; set; }
+
+    /// <summary>
+    /// Crea un pedido pendiente a partir de los ítems del carrito y calcula su total en el modelo.
+    /// </summary>
+    /// <param name="usuarioId">Usuario que compra.</param>
+    /// <param name="items">Ítems del carrito.</param>
+    /// <returns>Pedido en estado Pendiente, con una línea por ítem.</returns>
+    /// <exception cref="InvalidOperationException">Si el carrito está vacío.</exception>
+    public static Pedido DesdeCarrito(string usuarioId, IEnumerable<ItemCarrito> items)
+    {
+        var pedido = new Pedido { UsuarioId = usuarioId };
+        foreach (var item in items)
+        {
+            pedido.Lineas.Add(new LineaPedido
+            {
+                Tipo = item.Tipo,
+                ReferenciaId = item.ReferenciaId,
+                Descripcion = item.Descripcion,
+                Cantidad = item.Cantidad,
+                PrecioUnitario = item.PrecioUnitario
+            });
+        }
+
+        if (pedido.Lineas.Count == 0)
+            throw new InvalidOperationException("No se puede crear un pedido con el carrito vacío.");
+
+        pedido.Total = pedido.Lineas.Sum(l => l.Subtotal);
+        return pedido;
+    }
+
+    /// <summary>Guarda el resultado de la pasarela y cambia el estado del pedido.</summary>
+    /// <param name="aprobado">Decisión del banco.</param>
+    /// <param name="codigoAutorizacion">Código AUT-###### si se aprobó.</param>
+    /// <param name="mensaje">Motivo que devolvió la pasarela.</param>
+    /// <exception cref="InvalidOperationException">Si el pedido ya tenía un pago registrado.</exception>
+    public void RegistrarPago(bool aprobado, string? codigoAutorizacion, string? mensaje)
+    {
+        if (Pago != null)
+            throw new InvalidOperationException("Este pedido ya tiene un pago registrado.");
+
+        Pago = new Pago
+        {
+            Aprobado = aprobado,
+            Referencia = codigoAutorizacion ?? string.Empty,
+            Mensaje = mensaje,
+            Fecha = DateTime.UtcNow
+        };
+        Estado = aprobado ? EstadoPedido.Pagado : EstadoPedido.Rechazado;
+    }
 }
 
 /// <summary>
@@ -68,6 +118,10 @@ public class LineaPedido : EntidadBase
 
     /// <summary>Precio por unidad, en colones.</summary>
     public decimal PrecioUnitario { get; set; }
+
+    /// <summary>Cantidad × precio; se calcula, no se guarda en la base de datos.</summary>
+    [NotMapped]
+    public decimal Subtotal => Cantidad * PrecioUnitario;
 }
 
 /// <summary>

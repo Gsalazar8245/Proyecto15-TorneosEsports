@@ -1,0 +1,73 @@
+@using TorneosEsports.Web.Models.Entidades
+@model TorneosEsports.Web.Models.ViewModels.ResultadoPagoViewModel
+@{
+    var pedido = Model.Pedido;
+    var aprobado = pedido.Estado == EstadoPedido.Pagado;
+    ViewData["Title"] = aprobado ? "Pago aprobado" : "Pago rechazado";
+}
+
+@if (TempData["Error"] is string error)
+{
+    <div class="alert alert-warning">@error</div>
+}
+
+@if (aprobado)
+{
+    <div class="alert alert-success">
+        <h4 class="alert-heading">¡Pago aprobado!</h4>
+        <p class="mb-0">
+            Pedido #@pedido.Id · Autorización <strong>@pedido.Pago?.Referencia</strong>.
+            Te enviamos la confirmación por correo.
+        </p>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <h4 class="alert-heading">Pago rechazado</h4>
+        <p class="mb-0">Motivo: @pedido.Pago?.Mensaje. Tu carrito sigue igual; podés intentar con otra tarjeta.</p>
+    </div>
+}
+
+<table class="table table-sm">
+    <thead>
+        <tr><th>Producto</th><th>Cant.</th><th class="text-end">Subtotal</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var linea in pedido.Lineas)
+        {
+            <tr>
+                <td>@linea.Descripcion</td>
+                <td>@linea.Cantidad</td>
+                <td class="text-end">₡@linea.Subtotal.ToString("N0")</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr><th colspan="2" class="text-end">Total</th><th class="text-end">₡@pedido.Total.ToString("N0")</th></tr>
+    </tfoot>
+</table>
+
+@if (Model.EquiposPagados.Count > 0)
+{
+    <h5>Comprobantes de inscripción</h5>
+    <ul>
+        @foreach (var equipo in Model.EquiposPagados)
+        {
+            <li>
+                @equipo.Nombre —
+                <a asp-controller="Comprobante" asp-action="Ver" asp-route-id="@equipo.Id">ver comprobante con QR</a>
+            </li>
+        }
+    </ul>
+}
+
+@if (aprobado)
+{
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Volver al inicio</a>
+}
+else
+{
+    <a asp-action="Checkout" class="btn btn-primary">Intentar de nuevo</a>
+    <a asp-controller="Carrito" asp-action="Index" class="btn btn-link">Ver carrito</a>
+}

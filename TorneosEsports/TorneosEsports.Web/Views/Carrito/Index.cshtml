@@ -36,5 +36,7 @@ else
             <tr><th colspan="3" class="text-end">Total</th><th>₡@Model.Total.ToString("N0")</th><th></th></tr>
         </tfoot>
     </table>
-    <!-- Deilyn conecta aquí el botón de pago (checkout) -->
+    <div class="text-end">
+        <a asp-controller="Pago" asp-action="Checkout" class="btn btn-primary">Pagar</a>
+    </div>
 }

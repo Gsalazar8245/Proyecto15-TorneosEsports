@@ -48,6 +48,7 @@ builder.Services.AddRazorPages();
 
 // Módulos de cada integrante.
 builder.Services.AddModuloTorneos(); // Torneos, base de datos y llaves
+builder.Services.AddModuloPagos(builder.Configuration); // Pago, correo y Web API
 
 var app = builder.Build();
 
@@ -70,6 +71,9 @@ app.UseRouting();
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Swagger de la Web API de pagos (solo en desarrollo).
+app.UseModuloPagos();
 
 // Archivos estáticos.
 app.MapStaticAssets();
