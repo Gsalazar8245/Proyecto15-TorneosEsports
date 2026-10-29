@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TorneosEsports.Web.Data;
 using TorneosEsports.Web.Models.Entidades;
+using Microsoft.AspNetCore.Authorization;
 
+[Authorize(Roles = "Administrador")]
 public class EventosController : Controller
 {
     private readonly ApplicationDbContext _context;
