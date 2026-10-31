@@ -1,4 +1,4 @@
-﻿@model TorneosEsports.Web.Models.Entidades.Evento
+@model TorneosEsports.Web.Models.Entidades.Evento
 
 @{
     ViewData["Title"] = Model.Nombre;
@@ -61,13 +61,14 @@
                         <th>Precio por equipo</th>
                         <th>Cupos libres</th>
                         <th>Estado</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var t in Model.Torneos.OrderBy(t => t.Juego))
                     {
                         <tr>
-                            <td>@t.Juego</td>
+                            <td><a asp-controller="Torneos" asp-action="Detalle" asp-route-id="@t.Id" class="fw-semibold">@t.Juego</a></td>
                             <td>@t.Formato</td>
                             <td>@t.CierreInscripciones.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>₡@t.PrecioInscripcion.ToString("N0")</td>
@@ -81,6 +82,17 @@
                                 {
                                     <span class="badge text-bg-secondary">Inscripciones cerradas</span>
                                 }
+                            </td>
+                            <td class="text-end text-nowrap">
+                                @if (t.AceptaInscripciones(DateTime.Now) && t.CuposDisponibles(t.Equipos.Count) > 0)
+                                {
+                                    <a class="btn btn-sm btn-primary" asp-controller="Inscripcion" asp-action="Crear" asp-route-torneoId="@t.Id"><i class="bi bi-people me-1"></i>Inscribir equipo</a>
+                                }
+                                @if (t.Estado is TorneosEsports.Web.Models.Entidades.EstadoTorneo.EnJuego or TorneosEsports.Web.Models.Entidades.EstadoTorneo.Finalizado)
+                                {
+                                    <a class="btn btn-sm btn-outline-primary" asp-controller="Llaves" asp-action="Ver" asp-route-torneoId="@t.Id"><i class="bi bi-diagram-3 me-1"></i>Ver llaves</a>
+                                }
+                                <a class="btn btn-sm btn-outline-secondary" asp-controller="Torneos" asp-action="Detalle" asp-route-id="@t.Id">Detalle</a>
                             </td>
                         </tr>
                     }
