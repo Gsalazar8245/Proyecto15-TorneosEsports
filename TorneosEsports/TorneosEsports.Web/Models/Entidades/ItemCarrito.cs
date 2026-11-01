@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TorneosEsports.Web.Models.Entidades;
 
@@ -38,4 +39,7 @@ public class ItemCarrito : EntidadBase
 
     /// <summary>Precio por unidad, en colones.</summary>
     public decimal PrecioUnitario { get; set; }
+    [NotMapped]
+    public decimal Subtotal => Cantidad * PrecioUnitario;
 }
+

@@ -1,0 +1,24 @@
+﻿@model TorneosEsports.Web.Models.ViewModels.ComprobanteViewModel
+@{ ViewData["Title"] = "Comprobante de inscripción"; }
+
+<h2>Comprobante de inscripción</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <p><strong>Equipo:</strong> @Model.Equipo.Nombre</p>
+        <p><strong>Torneo:</strong> @Model.TorneoJuego</p>
+        <h5>Integrantes</h5>
+        <ul>
+            @foreach (var i in Model.Equipo.Integrantes)
+            {
+                <li>@i.Nombre (@i.Nick)</li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-6 text-center">
+        <img src="data:image/png;base64,@Model.QrBase64" alt="Código QR" style="max-width:260px" />
+        <p class="text-muted mt-2">Presentá este código en la entrada.</p>
+    </div>
+</div>
+
+<button class="btn btn-outline-secondary" onclick="window.print()">Imprimir</button>

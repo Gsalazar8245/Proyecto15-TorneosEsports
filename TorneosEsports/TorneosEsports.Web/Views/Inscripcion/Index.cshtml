@@ -1,0 +1,47 @@
+﻿@model IEnumerable<TorneosEsports.Web.Models.Entidades.Torneo>
+@{ ViewData["Title"] = "Inscripciones"; }
+
+<h2>Torneos con inscripciones abiertas</h2>
+
+@if (!Model.Any())
+{
+    <p>No hay torneos abiertos por ahora.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Juego</th>
+                <th>Formato</th>
+                <th>Precio por equipo</th>
+                <th>Cupos</th>
+                <th>Cierre</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var t in Model)
+        {
+            var cupos = t.CuposDisponibles(t.Equipos.Count);
+            <tr>
+                <td>@t.Juego</td>
+                <td>@t.Formato</td>
+                <td>₡@t.PrecioInscripcion.ToString("N0")</td>
+                <td>@cupos</td>
+                <td>@t.CierreInscripciones.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>
+                    @if (t.AceptaInscripciones(DateTime.Now) && cupos > 0)
+                    {
+                        <a class="btn btn-sm btn-primary" asp-action="Crear" asp-route-torneoId="@t.Id">Inscribir equipo</a>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No disponible</span>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

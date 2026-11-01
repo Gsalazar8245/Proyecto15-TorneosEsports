@@ -1,0 +1,37 @@
+﻿@model TorneosEsports.Web.Models.ViewModels.ValidacionViewModel
+@{ ViewData["Title"] = "Validar comprobante"; }
+
+<h2>Validar comprobante</h2>
+
+<form method="get" asp-action="Validar" class="mb-3">
+    <div class="input-group" style="max-width:520px">
+        <input name="codigo" value="@Model.Codigo" class="form-control" placeholder="Código del comprobante" />
+        <button class="btn btn-primary">Buscar</button>
+    </div>
+</form>
+
+@if (Model.Mensaje != null)
+{
+    <div class="alert @(Model.Valido ? "alert-success" : "alert-danger")">@Model.Mensaje</div>
+}
+
+@if (Model.Equipo != null)
+{
+    <p><strong>Equipo:</strong> @Model.Equipo.Nombre</p>
+    <p><strong>Torneo:</strong> @Model.TorneoJuego</p>
+    <ul>
+        @foreach (var i in Model.Equipo.Integrantes)
+        {
+            <li>@i.Nombre (@i.Nick)</li>
+        }
+    </ul>
+
+    @if (Model.Valido)
+    {
+        <form method="post" asp-action="Validar">
+            <input type="hidden" name="codigo" value="@Model.Codigo" />
+            <input type="hidden" name="confirmar" value="true" />
+            <button class="btn btn-success">Registrar ingreso</button>
+        </form>
+    }
+}

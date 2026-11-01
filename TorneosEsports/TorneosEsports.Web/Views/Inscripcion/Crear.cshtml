@@ -1,0 +1,43 @@
+﻿@model TorneosEsports.Web.Models.ViewModels.InscripcionEquipoViewModel
+@{
+    ViewData["Title"] = "Inscribir equipo";
+}
+
+<h2>Inscribir equipo en @Model.TorneoNombre</h2>
+<p>Precio por equipo: <strong>@Model.PrecioInscripcion.ToString("C")</strong></p>
+
+<form asp-action="Crear" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="TorneoId" />
+
+    <div class="mb-3">
+        <label asp-for="NombreEquipo" class="form-label"></label>
+        <input asp-for="NombreEquipo" class="form-control" />
+        <span asp-validation-for="NombreEquipo" class="text-danger"></span>
+    </div>
+
+    <h5>Integrantes (el capitán es uno de los 5)</h5>
+    @for (int i = 0; i < Model.Integrantes.Count; i++)
+    {
+        <div class="row mb-2">
+            <div class="col-md-4">
+                <input asp-for="Integrantes[i].Nombre" class="form-control" placeholder="Nombre" />
+                <span asp-validation-for="Integrantes[i].Nombre" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <input asp-for="Integrantes[i].Nick" class="form-control" placeholder="Nick" />
+                <span asp-validation-for="Integrantes[i].Nick" class="text-danger"></span>
+            </div>
+            <div class="col-md-5">
+                <input asp-for="Integrantes[i].Correo" class="form-control" placeholder="Correo" />
+                <span asp-validation-for="Integrantes[i].Correo" class="text-danger"></span>
+            </div>
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary">Inscribir y agregar al carrito</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
