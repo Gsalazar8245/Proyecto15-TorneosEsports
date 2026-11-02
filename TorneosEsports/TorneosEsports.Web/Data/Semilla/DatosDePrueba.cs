@@ -53,7 +53,6 @@ public static class DatosDePrueba
                 TorneoId = TorneoDemoId,
                 Nombre = NombresEquipos[i],
                 CapitanId = capitan.Id,
-                Pagado = true,
                 FechaCreacion = inicio.AddHours(i), // el orden de inscripción define la siembra
             };
             for (int j = 1; j <= Equipo.IntegrantesRequeridos; j++)
@@ -66,6 +65,7 @@ public static class DatosDePrueba
                     Correo = $"{nick}@arenalan.test",
                 });
             }
+            equipo.MarcarComoPagado(); // queda pagado y con su código de comprobante (QR)
             db.Equipos.Add(equipo);
         }
 
