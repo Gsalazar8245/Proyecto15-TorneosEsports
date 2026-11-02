@@ -1,5 +1,21 @@
+/* Tema visual de Arena LAN sobre Bootstrap 5.3. */
+:root {
+  --arena-oscuro: #12131c;
+  --arena-oscuro-2: #1d1f2e;
+  --arena-acento: #7c4dff;
+  --arena-acento-2: #00c2a8;
+  --bs-primary: #7c4dff;
+  --bs-primary-rgb: 124, 77, 255;
+  --bs-link-color: #6a3df0;
+  --bs-link-color-rgb: 106, 61, 240;
+  --bs-link-hover-color: #4d22c9;
+  --bs-body-bg: #f5f6fa;
+}
+
 html {
   font-size: 14px;
+  position: relative;
+  min-height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -8,19 +24,115 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
-  margin-bottom: 60px;
+  margin-bottom: 72px;
+  background-color: var(--bs-body-bg);
 }
 
+/* Botones principales con el color del tema. */
+.btn-primary {
+  --bs-btn-bg: var(--arena-acento);
+  --bs-btn-border-color: var(--arena-acento);
+  --bs-btn-hover-bg: #6a3df0;
+  --bs-btn-hover-border-color: #6a3df0;
+  --bs-btn-active-bg: #5a2fe0;
+  --bs-btn-active-border-color: #5a2fe0;
+  --bs-btn-disabled-bg: var(--arena-acento);
+  --bs-btn-disabled-border-color: var(--arena-acento);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--arena-acento);
+  --bs-btn-border-color: var(--arena-acento);
+  --bs-btn-hover-bg: var(--arena-acento);
+  --bs-btn-hover-border-color: var(--arena-acento);
+  --bs-btn-active-bg: var(--arena-acento);
+  --bs-btn-active-border-color: var(--arena-acento);
+}
+
+.btn-arena {
+  background: linear-gradient(90deg, var(--arena-acento), var(--arena-acento-2));
+  color: #fff;
+  border: 0;
+}
+
+.btn-arena:hover {
+  color: #fff;
+  filter: brightness(1.1);
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem rgba(124, 77, 255, 0.45);
+}
+
+/* Menú. */
+.navbar-arena {
+  background: linear-gradient(90deg, var(--arena-oscuro), var(--arena-oscuro-2));
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.navbar-arena .nav-link {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.navbar-arena .nav-link:hover,
+.navbar-arena .nav-link:focus {
+  color: #fff;
+}
+
+.navbar-arena .navbar-brand i {
+  color: var(--arena-acento-2);
+}
+
+/* Portada de la página de inicio. */
+.hero-arena {
+  background: radial-gradient(circle at top right, rgba(0, 194, 168, 0.35), transparent 45%),
+              linear-gradient(135deg, var(--arena-oscuro), #2a1c5c);
+  color: #fff;
+  border-radius: 1rem;
+  padding: 3rem 2rem;
+}
+
+.hero-arena .lead {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Tarjetas. */
+.card {
+  border: 0;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 12px rgba(18, 19, 28, 0.08);
+}
+
+.card-icono {
+  font-size: 2rem;
+  color: var(--arena-acento);
+}
+
+/* Tablas. */
+.table > thead th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #6c757d;
+}
+
+/* Pie de página. */
+.footer-arena {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  line-height: 56px;
+  background-color: var(--arena-oscuro);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.footer-arena a {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Formularios de Identity (plantilla). */
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);
   text-align: end;

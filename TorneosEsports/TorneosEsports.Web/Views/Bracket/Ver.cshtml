@@ -1,0 +1,46 @@
+﻿@model TorneosEsports.Web.Models.ViewModels.BracketViewModel
+@{
+    ViewData["Title"] = "Bracket";
+}
+
+<h2>Llaves: @Model.Juego</h2>
+<p><span id="estado" class="badge bg-secondary">Conectando...</span></p>
+
+<div id="bracket">
+    <partial name="_Bracket" model="Model" />
+</div>
+
+@if (User.IsInRole("Administrador"))
+{
+    <form asp-action="Notificar" asp-route-id="@Model.TorneoId" method="post" class="mt-3">
+        <button class="btn btn-outline-primary btn-sm">Actualizar en vivo a todos (prueba)</button>
+    </form>
+}
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    <script>
+        const torneoId = @Model.TorneoId;
+        const estado = document.getElementById('estado');
+        const conexion = new signalR.HubConnectionBuilder()
+            .withUrl('/hubs/bracket')
+            .withAutomaticReconnect()
+            .build();
+
+        async function recargar() {
+            const r = await fetch(`/Bracket/Llaves/${torneoId}`);
+            if (r.ok) document.getElementById('bracket').innerHTML = await r.text();
+        }
+
+        conexion.on('BracketActualizado', recargar);
+        conexion.onreconnected(async () => {
+            await conexion.invoke('UnirseATorneo', torneoId);
+            await recargar();
+        });
+
+        conexion.start()
+            .then(() => conexion.invoke('UnirseATorneo', torneoId))
+            .then(() => { estado.textContent = 'En vivo'; estado.className = 'badge bg-success'; })
+            .catch(() => { estado.textContent = 'Sin conexión en vivo'; estado.className = 'badge bg-danger'; });
+    </script>
+}

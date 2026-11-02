@@ -4,7 +4,7 @@ using TorneosEsports.Web.Data;
 using TorneosEsports.Web.Extensions;
 using TorneosEsports.Web.Security;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Configuración de la base de datos.
 var connectionString = builder.Configuration
@@ -16,6 +16,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddSignalR();
+builder.Services.AddScoped<TorneosEsports.Web.Hubs.IBracketNotificador, TorneosEsports.Web.Hubs.BracketNotificador>();
+builder.Services.AddScoped<TorneosEsports.Web.Services.Interfaces.INotificadorLlaves, TorneosEsports.Web.Hubs.NotificadorLlavesSignalR>();
 
 // Configuración de ASP.NET Core Identity con roles.
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
@@ -82,10 +85,13 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+app.MapHub<TorneosEsports.Web.Hubs.BracketHub>("/hubs/bracket");
 
 // Páginas de ASP.NET Core Identity.
 app.MapRazorPages()
    .WithStaticAssets();
+// En Desarrollo: aplica las migraciones y crea los datos de prueba (equipos y administrador de prueba).
+   await app.SembrarDatosDePruebaAsync();
 // Crear los roles iniciales del sistema.
 await IdentitySeeder.InitializeAsync(app.Services, app.Configuration);
 app.Run();

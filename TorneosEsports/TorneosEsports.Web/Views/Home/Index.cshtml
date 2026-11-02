@@ -1,5 +1,5 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Inicio";
 }
 
 @if (TempData["Error"] != null)
@@ -10,8 +10,45 @@
 {
     <div class="alert alert-success">@TempData["Exito"]</div>
 }
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <a class="btn btn-primary" asp-controller="Inscripcion" asp-action="Index">Inscribir un equipo</a>
+
+<section class="hero-arena mb-4">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+            <span class="badge text-bg-light mb-3"><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Temporada 2026</span>
+            <h1 class="display-5 fw-bold">Torneos de esports y LAN party</h1>
+            <p class="lead mb-4">Comprá tu pase, inscribí a tu equipo de 5 y seguí las llaves en vivo hasta la final.</p>
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-arena btn-lg" asp-controller="Catalogo" asp-action="Index"><i class="bi bi-calendar-event me-1"></i>Ver eventos</a>
+                <a class="btn btn-outline-light btn-lg" asp-controller="Torneos" asp-action="Index"><i class="bi bi-trophy me-1"></i>Ver torneos</a>
+                <a class="btn btn-outline-light btn-lg" asp-controller="Inscripcion" asp-action="Index"><i class="bi bi-people me-1"></i>Inscribir equipo</a>
+            </div>
+        </div>
+        <div class="col-lg-4 text-center d-none d-lg-block">
+            <i class="bi bi-controller" style="font-size: 9rem; opacity: 0.85;"></i>
+        </div>
+    </div>
+</section>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card h-100 p-3">
+            <i class="bi bi-calendar-event card-icono"></i>
+            <h2 class="h5 mt-2">Eventos</h2>
+            <p class="text-muted mb-0">LAN parties y festivales con sede, fecha, cupo de puestos y precio del pase.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 p-3">
+            <i class="bi bi-diagram-3 card-icono"></i>
+            <h2 class="h5 mt-2">Llaves automáticas</h2>
+            <p class="text-muted mb-0">Al cerrar inscripciones se arma el bracket solo con los equipos que pagaron.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 p-3">
+            <i class="bi bi-qr-code card-icono"></i>
+            <h2 class="h5 mt-2">Compra y entrada con QR</h2>
+            <p class="text-muted mb-0">Pagá en línea y entrá al evento con el código QR de tu comprobante.</p>
+        </div>
+    </div>
 </div>

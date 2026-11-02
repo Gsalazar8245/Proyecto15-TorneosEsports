@@ -47,6 +47,10 @@ else
                         <td><partial name="_EstadoTorneo" model="torneo.Estado" /></td>
                         <td class="text-end text-nowrap">
                             <a class="btn btn-sm btn-outline-secondary" asp-action="Detalle" asp-route-id="@torneo.Id">Detalle</a>
+                            @if (torneo.Estado is EstadoTorneo.EnJuego or EstadoTorneo.Finalizado)
+                            {
+                                <a class="btn btn-sm btn-outline-primary" asp-controller="Llaves" asp-action="Ver" asp-route-torneoId="@torneo.Id">Llaves</a>
+                            }
                             @if (esAdmin && torneo.PuedeEditarse)
                             {
                                 <a class="btn btn-sm btn-outline-warning" asp-action="Editar" asp-route-id="@torneo.Id">Editar</a>

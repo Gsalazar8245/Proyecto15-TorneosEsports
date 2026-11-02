@@ -1,0 +1,72 @@
+﻿@model IEnumerable<TorneosEsports.Web.Models.Entidades.Evento>
+
+@{
+    ViewData["Title"] = "Catálogo de eventos";
+    var busqueda = ViewData["Busqueda"] as string;
+}
+
+<div class="py-4">
+    <h1 class="mb-1">Próximos eventos</h1>
+    <p class="text-muted">Elige un evento para ver su información y los torneos que se juegan.</p>
+
+    <form method="get" asp-action="Index" class="row g-2 mb-4">
+        <div class="col-sm-8 col-md-6">
+            <input type="search" name="q" value="@busqueda" class="form-control"
+                   placeholder="Buscar por nombre o sede" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            @if (!string.IsNullOrWhiteSpace(busqueda))
+            {
+                <a asp-action="Index" class="btn btn-link">Limpiar</a>
+            }
+        </div>
+    </form>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">No hay eventos próximos que coincidan con tu búsqueda.</div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var e in Model)
+            {
+                var tieneImagen = !string.IsNullOrWhiteSpace(e.ImagenUrl)
+                                  && (e.ImagenUrl.StartsWith("http") || e.ImagenUrl.StartsWith("/"));
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        @if (tieneImagen)
+                        {
+                            <img src="@e.ImagenUrl" class="card-img-top" alt="@e.Nombre"
+                                 style="height:180px;object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center justify-content-center bg-dark text-white"
+                                 style="height:180px;font-size:3rem;">
+                                @(e.Nombre.Length > 0 ? e.Nombre[..1].ToUpper() : "?")
+                            </div>
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@e.Nombre</h5>
+                            <p class="card-text mb-1"><strong>Sede:</strong> @e.Sede</p>
+                            <p class="card-text mb-1"><strong>Fecha:</strong> @e.Fecha.ToString("dd/MM/yyyy HH:mm")</p>
+                            <p class="card-text mb-1"><strong>Cupo:</strong> @e.CupoPuestos puestos</p>
+                            <p class="card-text mb-2">
+                                <strong>Pase:</strong>
+                                @(e.PrecioPase == 0 ? "Gratis" : "₡" + e.PrecioPase.ToString("N0"))
+                            </p>
+                            <span class="badge text-bg-secondary">
+                                @e.Torneos.Count @(e.Torneos.Count == 1 ? "torneo" : "torneos")
+                            </span>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pb-3">
+                            <a asp-action="Detalle" asp-route-id="@e.Id" class="btn btn-outline-primary w-100">Ver detalle</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
